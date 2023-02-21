@@ -23,7 +23,7 @@ import javax.swing.ButtonGroup;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class Ventana1 extends JFrame {
+public class ConfiguracionConexion extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textServidor;
@@ -48,7 +48,7 @@ public class Ventana1 extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Ventana1 frame = new Ventana1();
+					ConfiguracionConexion frame = new ConfiguracionConexion();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -60,7 +60,7 @@ public class Ventana1 extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Ventana1() {
+	public ConfiguracionConexion() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch(Exception e) {
