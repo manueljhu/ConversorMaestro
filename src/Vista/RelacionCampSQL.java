@@ -22,7 +22,11 @@ import javax.swing.JMenuBar;
 import javax.swing.JSeparator;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
-
+/**
+ * 
+ * @author Ryder
+ *
+ */
 public class RelacionCampSQL extends JFrame {
 
 	private JPanel contentPane;

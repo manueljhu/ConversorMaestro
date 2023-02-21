@@ -23,7 +23,11 @@ import java.awt.Color;
 import javax.swing.JTextArea;
 import javax.swing.JSeparator;
 import javax.swing.JButton;
-
+/**
+ * 
+ * @author Ryder
+ *
+ */
 public class ResumenTraspaso extends JFrame {
 
 	private JPanel contentPane;
