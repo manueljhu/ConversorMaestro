@@ -66,7 +66,7 @@ public class RelacionCampSQL extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(new MigLayout("", "[grow][grow][237.00,grow][][205.00,grow][grow][grow]", "[][][][][452.00][32.00,top][31.00][56.00]"));
 		
-		JLabel lblNewLabel = new JLabel("CREACIÓN DE CAMPOS DE ORIGEN DBF\r\n");
+		JLabel lblNewLabel = new JLabel("CREACIÓN DE CAMPOS DE ORIGEN SQL");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 21));
 		contentPane.add(lblNewLabel, "cell 0 0 7 1,alignx center");
 		
