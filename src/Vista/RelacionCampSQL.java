@@ -22,6 +22,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JSeparator;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
+import javax.swing.JCheckBox;
 /**
  * 
  * @author Ryder
@@ -151,6 +152,10 @@ public class RelacionCampSQL extends JFrame {
 		rdbtnInsertar.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		rdbtnInsertar.setHorizontalAlignment(SwingConstants.LEFT);
 		contentPane.add(rdbtnInsertar, "cell 4 5");
+		
+		JCheckBox chckbxVaciarDestino = new JCheckBox("Vaciar Destino");
+		chckbxVaciarDestino.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		contentPane.add(chckbxVaciarDestino, "cell 5 5");
 		
 		JSeparator separator = new JSeparator();
 		separator.setMinimumSize(new Dimension(1000, 0));
