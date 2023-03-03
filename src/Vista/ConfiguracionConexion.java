@@ -6,6 +6,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import Controlador.Controlador;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -40,6 +42,7 @@ public class ConfiguracionConexion extends JFrame {
 	private JTextField textNombreBD;
 	private final ButtonGroup Grupo1 = new ButtonGroup();
 	private final ButtonGroup Grupo2 = new ButtonGroup();
+	private Controlador controlador;
 
 	/**
 	 * Launch the application.
@@ -148,7 +151,7 @@ public class ConfiguracionConexion extends JFrame {
 		JButton btnNewButton = new JButton("Probar Conexión");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				probarConexion();
+				probarConexionDestino();
 			}
 		});
 		btnNewButton.setBounds(810, 133, 113, 23);
@@ -163,21 +166,21 @@ public class ConfiguracionConexion extends JFrame {
 		separator_1.setMinimumSize(new Dimension(880, 0));
 		contentPane.add(separator_1);
 		
-		JRadioButton rdbtnNewRadioButton = new JRadioButton("SQL");
-		rdbtnNewRadioButton.setSelected(true);
-		Grupo1.add(rdbtnNewRadioButton);
-		rdbtnNewRadioButton.setBounds(269, 236, 45, 23);
-		contentPane.add(rdbtnNewRadioButton);
+		JRadioButton rdbtnSQL = new JRadioButton("SQL");
+		rdbtnSQL.setSelected(true);
+		Grupo1.add(rdbtnSQL);
+		rdbtnSQL.setBounds(269, 236, 45, 23);
+		contentPane.add(rdbtnSQL);
 		
-		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("DBF");
-		Grupo1.add(rdbtnNewRadioButton_1);
-		rdbtnNewRadioButton_1.setBounds(368, 236, 45, 23);
-		contentPane.add(rdbtnNewRadioButton_1);
+		JRadioButton rdbtnDBF = new JRadioButton("DBF");
+		Grupo1.add(rdbtnDBF);
+		rdbtnDBF.setBounds(368, 236, 45, 23);
+		contentPane.add(rdbtnDBF);
 		
-		JRadioButton rdbtnNewRadioButton_2 = new JRadioButton("Excel");
-		Grupo1.add(rdbtnNewRadioButton_2);
-		rdbtnNewRadioButton_2.setBounds(466, 236, 51, 23);
-		contentPane.add(rdbtnNewRadioButton_2);
+		JRadioButton rdbtnEXCEL = new JRadioButton("Excel");
+		Grupo1.add(rdbtnEXCEL);
+		rdbtnEXCEL.setBounds(466, 236, 51, 23);
+		contentPane.add(rdbtnEXCEL);
 		
 		JSeparator separator_2 = new JSeparator();
 		separator_2.setBounds(20, 275, 880, 2);
@@ -281,8 +284,9 @@ public class ConfiguracionConexion extends JFrame {
 		JButton btnNewButton_3 = new JButton("Probar Conexión");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				recogerConfSQL();
-				
+
+				probarConexionOrigen();
+
 				
 			}
 		});
@@ -321,27 +325,27 @@ public class ConfiguracionConexion extends JFrame {
 		contentPane.add(separator_5);
 	}
 
-	protected void probarConexion() {
+	protected void probarConexionOrigen() {
+		String servidorOrigen = textServidorOrigen.getText();
+		String usuarioOrigen = textUsuarioOrigen.getText();
+		String claveOrigen = textClaveOrigen.getText();
+		String nombreBDOrigen = textNombreBD.getText();
+		JOptionPane.showMessageDialog(this, servidorOrigen+"\n"+usuarioOrigen+"\n"+claveOrigen+"\n"+nombreBDOrigen+"\n", 
+				"Recogiendo datos", JOptionPane.WARNING_MESSAGE);
+		return;
+		 
+	}
+
+	protected void probarConexionDestino() {
 		JOptionPane.showMessageDialog(this, "Zona en construcción.", 
 				"Error", JOptionPane.WARNING_MESSAGE);
 		return;
 		
 	}
-	
 
-	protected void recogerConfSQL() {
-		String servidorOrigen = textServidorOrigen.getText();
-		String usuarioOrigen = textUsuarioOrigen.getText();
-		String claveOrigen = textClaveOrigen.getText();
-		String nombreBD = textNombreBD.getText();
-
-
-		Centro centro = new Centro(cod_centro, nombre, direccion);
-		controlador.insertaCentro(centro);
+	public void setControlador(Controlador controlador) {
+		this.controlador=controlador;
 		
 	}
-	
-	
-	
-	
+
 }
