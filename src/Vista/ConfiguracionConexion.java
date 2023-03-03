@@ -279,6 +279,13 @@ public class ConfiguracionConexion extends JFrame {
 		textNombreBD.setColumns(10);
 		
 		JButton btnNewButton_3 = new JButton("Probar Conexión");
+		btnNewButton_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				recogerConfSQL();
+				
+				
+			}
+		});
 		btnNewButton_3.setBounds(48, 439, 113, 23);
 		contentPane.add(btnNewButton_3);
 		
@@ -320,4 +327,21 @@ public class ConfiguracionConexion extends JFrame {
 		return;
 		
 	}
+	
+
+	protected void recogerConfSQL() {
+		String servidorOrigen = textServidorOrigen.getText();
+		String usuarioOrigen = textUsuarioOrigen.getText();
+		String claveOrigen = textClaveOrigen.getText();
+		String nombreBD = textNombreBD.getText();
+
+
+		Centro centro = new Centro(cod_centro, nombre, direccion);
+		controlador.insertaCentro(centro);
+		
+	}
+	
+	
+	
+	
 }
