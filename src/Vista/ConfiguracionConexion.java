@@ -50,6 +50,8 @@ public class ConfiguracionConexion extends JFrame {
 	private JButton btnProbarConexionOrigen;
 	private JButton btnFicheroExcel;
 	private JButton btnFicheroDBF;
+	private JComboBox comboDigitosGrupos;
+	private JComboBox comboDigitosCuentas;
 
 	/**
 	 * Launch the application.
@@ -143,7 +145,7 @@ public class ConfiguracionConexion extends JFrame {
 		lblNewLabel_6.setBounds(188, 137, 77, 14);
 		contentPane.add(lblNewLabel_6);
 		
-		JComboBox comboDigitosCuentas = new JComboBox();
+		comboDigitosCuentas = new JComboBox();
 		comboDigitosCuentas.setModel(new DefaultComboBoxModel(new String[] {"9", "10", "11", "12"}));
 		comboDigitosCuentas.setBounds(269, 134, 45, 22);
 		contentPane.add(comboDigitosCuentas);
@@ -152,7 +154,7 @@ public class ConfiguracionConexion extends JFrame {
 		lblNewLabel_7.setBounds(390, 137, 72, 14);
 		contentPane.add(lblNewLabel_7);
 		
-		JComboBox comboDigitosGrupos = new JComboBox();
+		comboDigitosGrupos = new JComboBox();
 		comboDigitosGrupos.setModel(new DefaultComboBoxModel(new String[] {"3", "4", "5"}));
 		comboDigitosGrupos.setBounds(466, 134, 51, 22);
 		contentPane.add(comboDigitosGrupos);
@@ -313,7 +315,7 @@ public class ConfiguracionConexion extends JFrame {
 		contentPane.add(lblNewLabel_18);
 		
 		textNombreBD = new JTextField();
-		textNombreBD.setText("2022VJ");
+		textNombreBD.setText("2022LD");
 		textNombreBD.setBounds(28, 415, 152, 20);
 		contentPane.add(textNombreBD);
 		textNombreBD.setColumns(10);
@@ -330,22 +332,26 @@ public class ConfiguracionConexion extends JFrame {
 		btnProbarConexionOrigen.setBounds(48, 439, 113, 23);
 		contentPane.add(btnProbarConexionOrigen);
 		
-		JRadioButton rdbtnNewRadioButton_3 = new JRadioButton("Tablas");
-		rdbtnNewRadioButton_3.setSelected(true);
-		Grupo2.add(rdbtnNewRadioButton_3);
-		rdbtnNewRadioButton_3.setBounds(28, 468, 57, 23);
-		contentPane.add(rdbtnNewRadioButton_3);
+		JRadioButton rdbtnTablas = new JRadioButton("Tablas");
+		rdbtnTablas.setSelected(true);
+		Grupo2.add(rdbtnTablas);
+		rdbtnTablas.setBounds(28, 468, 57, 23);
+		contentPane.add(rdbtnTablas);
 		
-		JRadioButton rdbtnNewRadioButton_4 = new JRadioButton("Vistas");
-		Grupo2.add(rdbtnNewRadioButton_4);
-		rdbtnNewRadioButton_4.setBounds(89, 468, 53, 23);
-		contentPane.add(rdbtnNewRadioButton_4);
+		JRadioButton rdbtnVistas = new JRadioButton("Vistas");
+		Grupo2.add(rdbtnVistas);
+		rdbtnVistas.setBounds(89, 468, 53, 23);
+		contentPane.add(rdbtnVistas);
 		
 		JLabel lblNewLabel_17 = new JLabel("Clave");
 		lblNewLabel_17.setBounds(106, 355, 27, 14);
 		contentPane.add(lblNewLabel_17);
 		
 		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btnCancelar.setBounds(247, 505, 89, 23);
 		contentPane.add(btnCancelar);
 		
@@ -354,6 +360,49 @@ public class ConfiguracionConexion extends JFrame {
 		contentPane.add(btnAtras);
 		
 		JButton btnSiguiente = new JButton("Siguiente");
+		btnSiguiente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				String ejercicio = textEjercicio.getText();
+				int digitosCuentas = Integer.parseInt(comboDigitosCuentas.getSelectedItem().toString());
+				int digitosGrupos = Integer.parseInt(comboDigitosGrupos.getSelectedItem().toString());
+				String almacen = textAlmacenDestino.getText();
+				
+				String tipoTablaOrigen = "Tablas";
+				
+				if(rdbtnTablas.isSelected()) {
+					tipoTablaOrigen = "Tablas";
+				}else if(rdbtnVistas.isSelected()) {
+					tipoTablaOrigen = "Vistas";
+				}
+				
+				miControlador.setEjercicio(ejercicio);
+				miControlador.setDigitosCuentas(digitosCuentas);
+				miControlador.setDigitosGrupos(digitosGrupos);
+				miControlador.setAlmacenDestino(almacen);
+				miControlador.setTipoTablaOrigen(tipoTablaOrigen);
+				
+				guardarConexionDestino();
+				guardarConexionOrigen();
+				
+				
+				if (rdbtnSQL.isSelected()) {
+					miControlador.vistaSQL();
+					miControlador.rellenaComboTablasOrigen();
+					miControlador.rellenaComboTablasDestino("SQL");
+					miControlador.rellenaTablaOrigen();
+					miControlador.rellenaTablaDestino();
+				}else if (rdbtnDBF.isSelected()) {
+					miControlador.vistaDBF();
+
+				}else if (rdbtnEXCEL.isSelected()) {
+					miControlador.vistaExel();
+
+				}
+				
+				
+			}
+		});
 		btnSiguiente.setBounds(558, 503, 89, 23);
 		contentPane.add(btnSiguiente);
 		
@@ -375,6 +424,24 @@ public class ConfiguracionConexion extends JFrame {
 		String cadenaConexionOrigen = "jdbc:jtds:sqlserver://" + ipServidorOrigen + ";instance=" + instanciaOrigen + ";DatabaseName=[" + nombreBDOrigen + "]";
 		System.out.println(cadenaConexionOrigen+" "+usuarioOrigen+" "+claveOrigen);
 		miControlador.setConexionOrigen(cadenaConexionOrigen, usuarioOrigen, claveOrigen);
+		miControlador.testConexionOrigen();
+		 
+	}
+	
+	protected void guardarConexionOrigen() {
+		String servidor = textServidorOrigen.getText().replace("\\", "%");
+		String [] partesConexion = servidor.split("%");
+		
+		String ipServidorOrigen = partesConexion[0];
+		String instanciaOrigen = partesConexion[1];
+		String usuarioOrigen = textUsuarioOrigen.getText();
+		String claveOrigen = textClaveOrigen.getText();
+		String nombreBDOrigen = textNombreBD.getText();
+		
+		String cadenaConexionOrigen = "jdbc:jtds:sqlserver://" + ipServidorOrigen + ";instance=" + instanciaOrigen + ";DatabaseName=[" + nombreBDOrigen + "]";
+		System.out.println(cadenaConexionOrigen+" "+usuarioOrigen+" "+claveOrigen);
+		miControlador.setConexionOrigen(cadenaConexionOrigen, usuarioOrigen, claveOrigen);
+		
 		 
 	}
 	
@@ -393,6 +460,25 @@ public class ConfiguracionConexion extends JFrame {
 		String cadenaConexionDestino = "jdbc:jtds:sqlserver://" + ipServidorDestino + ";instance=" + instanciaDestino + ";DatabaseName=GpBusiness" + empresa;
 		System.out.println(cadenaConexionDestino+" "+usuarioDestino+" "+claveDestino);
 		miControlador.setConexionDestino(cadenaConexionDestino, usuarioDestino, claveDestino);
+		miControlador.testConexionDestino();
+
+		
+	}
+	
+	protected void guardarConexionDestino() {
+		String servidor = textServidor.getText().replace("\\", "%");
+		String [] partesConexion = servidor.split("%");
+		
+		String ipServidorDestino = partesConexion[0];
+		String instanciaDestino = partesConexion[1];
+		String usuarioDestino = textUsuarioOrigen.getText();
+		String claveDestino = textClave.getText();
+		String empresa = textNumEmpresa.getText();
+		
+		String cadenaConexionDestino = "jdbc:jtds:sqlserver://" + ipServidorDestino + ";instance=" + instanciaDestino + ";DatabaseName=GpBusiness" + empresa;
+		System.out.println(cadenaConexionDestino+" "+usuarioDestino+" "+claveDestino);
+		miControlador.setConexionDestino(cadenaConexionDestino, usuarioDestino, claveDestino);
+		
 
 		
 	}

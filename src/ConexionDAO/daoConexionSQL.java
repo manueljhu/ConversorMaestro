@@ -24,6 +24,10 @@ public class daoConexionSQL {
 	public daoConexionSQL(Controlador miControlador) {
 		this.miControlador = miControlador;
 	}
+	
+	public daoConexionSQL() {
+		
+	}
 
 	public void testConexionDestino() {
 		Connection cn = null;
@@ -62,6 +66,7 @@ public class daoConexionSQL {
 	}
 
 	public ArrayList<String> devuelveTablasOrigen() {
+		System.out.println(cadenaConexionOrigen);
 		Connection cn = null;
 		ArrayList<String> tablas = new ArrayList<>();
 		try {
@@ -99,7 +104,7 @@ public class daoConexionSQL {
 
 		return tablas;
 	}
-	
+
 	public ArrayList<String> devuelveVistasOrigen() {
 		Connection cn = null;
 		ArrayList<String> vistas = new ArrayList<>();
@@ -137,6 +142,50 @@ public class daoConexionSQL {
 		}
 
 		return vistas;
+	}
+
+	public ArrayList<String> devuelveColumnasTabla(String nombreTabla, String oriOrDes) {
+		Connection cn = null;
+		ArrayList<String> columnas = new ArrayList<>();
+		String sentencia = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='" + nombreTabla + "'";
+		try {
+
+			Class.forName("net.sourceforge.jtds.jdbc.Driver");
+			if (oriOrDes.equals("Origen")) {
+				cn = DriverManager.getConnection(cadenaConexionOrigen, usuarioOrigen, contrasenaOrigen);
+
+			}else if (oriOrDes.equals("Destino")) {
+				cn = DriverManager.getConnection(cadenaConexionDestino, usuarioDestino, contrasenaDestino);
+
+			}
+
+		} catch (Exception e) {
+			// System.out.println(e);
+			// e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Error al intentar conectar con la base de datos origen:\n " + e + ".",
+					"Aviso", JOptionPane.ERROR_MESSAGE);
+		}
+		try {
+
+			Statement st = cn.createStatement();
+			ResultSet rs = st.executeQuery(sentencia);
+
+			while (rs.next()) {
+				columnas.add(rs.getString("COLUMN_NAME"));
+			}
+
+			rs.close();
+			st.close();
+			cn.close();
+			//// System.out.println("Desconectado");
+		} catch (Exception e) {
+
+			System.out.println("Error al recuperar datos " + e);
+		}
+		
+		
+		
+		return columnas;
 	}
 
 	public String getCadenaConexionDestino() {
