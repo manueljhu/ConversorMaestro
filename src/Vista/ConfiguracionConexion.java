@@ -6,6 +6,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import Controlador.Controlador;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -22,6 +24,7 @@ import javax.swing.UIManager;
 import javax.swing.ButtonGroup;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.DefaultComboBoxModel;
 
 public class ConfiguracionConexion extends JFrame {
 
@@ -40,6 +43,15 @@ public class ConfiguracionConexion extends JFrame {
 	private JTextField textNombreBD;
 	private final ButtonGroup Grupo1 = new ButtonGroup();
 	private final ButtonGroup Grupo2 = new ButtonGroup();
+	private Controlador miControlador;
+	private JRadioButton rdbtnSQL;
+	private JRadioButton rdbtnDBF;
+	private JRadioButton rdbtnEXCEL;
+	private JButton btnProbarConexionOrigen;
+	private JButton btnFicheroExcel;
+	private JButton btnFicheroDBF;
+	private JComboBox comboDigitosGrupos;
+	private JComboBox comboDigitosCuentas;
 
 	/**
 	 * Launch the application.
@@ -102,21 +114,25 @@ public class ConfiguracionConexion extends JFrame {
 		contentPane.add(lblNewLabel_4);
 		
 		textServidor = new JTextField();
+		textServidor.setText("TECNICO-PC\\GPBUSINESS");
 		textServidor.setBounds(28, 109, 489, 20);
 		contentPane.add(textServidor);
 		textServidor.setColumns(10);
 		
 		textUsuario = new JTextField();
+		textUsuario.setText("sa");
 		textUsuario.setBounds(521, 109, 126, 20);
 		contentPane.add(textUsuario);
 		textUsuario.setColumns(10);
 		
 		textClave = new JTextField();
+		textClave.setText("Fsgpsql00");
 		textClave.setBounds(651, 109, 155, 20);
 		contentPane.add(textClave);
 		textClave.setColumns(10);
 		
 		textNumEmpresa = new JTextField();
+		textNumEmpresa.setText("01");
 		textNumEmpresa.setBounds(810, 109, 113, 20);
 		contentPane.add(textNumEmpresa);
 		textNumEmpresa.setColumns(10);
@@ -129,7 +145,8 @@ public class ConfiguracionConexion extends JFrame {
 		lblNewLabel_6.setBounds(188, 137, 77, 14);
 		contentPane.add(lblNewLabel_6);
 		
-		JComboBox comboDigitosCuentas = new JComboBox();
+		comboDigitosCuentas = new JComboBox();
+		comboDigitosCuentas.setModel(new DefaultComboBoxModel(new String[] {"9", "10", "11", "12"}));
 		comboDigitosCuentas.setBounds(269, 134, 45, 22);
 		contentPane.add(comboDigitosCuentas);
 		
@@ -137,7 +154,8 @@ public class ConfiguracionConexion extends JFrame {
 		lblNewLabel_7.setBounds(390, 137, 72, 14);
 		contentPane.add(lblNewLabel_7);
 		
-		JComboBox comboDigitosGrupos = new JComboBox();
+		comboDigitosGrupos = new JComboBox();
+		comboDigitosGrupos.setModel(new DefaultComboBoxModel(new String[] {"3", "4", "5"}));
 		comboDigitosGrupos.setBounds(466, 134, 51, 22);
 		contentPane.add(comboDigitosGrupos);
 		
@@ -148,7 +166,7 @@ public class ConfiguracionConexion extends JFrame {
 		JButton btnNewButton = new JButton("Probar Conexión");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				probarConexion();
+				probarConexionDestino();
 			}
 		});
 		btnNewButton.setBounds(810, 133, 113, 23);
@@ -163,21 +181,36 @@ public class ConfiguracionConexion extends JFrame {
 		separator_1.setMinimumSize(new Dimension(880, 0));
 		contentPane.add(separator_1);
 		
-		JRadioButton rdbtnNewRadioButton = new JRadioButton("SQL");
-		rdbtnNewRadioButton.setSelected(true);
-		Grupo1.add(rdbtnNewRadioButton);
-		rdbtnNewRadioButton.setBounds(269, 236, 45, 23);
-		contentPane.add(rdbtnNewRadioButton);
+		rdbtnSQL = new JRadioButton("SQL");
+		rdbtnSQL.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controlSeleccionOrigen();
+			}
+		});
+		rdbtnSQL.setSelected(true);
+		Grupo1.add(rdbtnSQL);
+		rdbtnSQL.setBounds(269, 236, 45, 23);
+		contentPane.add(rdbtnSQL);
 		
-		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("DBF");
-		Grupo1.add(rdbtnNewRadioButton_1);
-		rdbtnNewRadioButton_1.setBounds(368, 236, 45, 23);
-		contentPane.add(rdbtnNewRadioButton_1);
+		rdbtnDBF = new JRadioButton("DBF");
+		rdbtnDBF.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controlSeleccionOrigen();
+			}
+		});
+		Grupo1.add(rdbtnDBF);
+		rdbtnDBF.setBounds(368, 236, 45, 23);
+		contentPane.add(rdbtnDBF);
 		
-		JRadioButton rdbtnNewRadioButton_2 = new JRadioButton("Excel");
-		Grupo1.add(rdbtnNewRadioButton_2);
-		rdbtnNewRadioButton_2.setBounds(466, 236, 51, 23);
-		contentPane.add(rdbtnNewRadioButton_2);
+		rdbtnEXCEL = new JRadioButton("Excel");
+		rdbtnEXCEL.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controlSeleccionOrigen();
+			}
+		});
+		Grupo1.add(rdbtnEXCEL);
+		rdbtnEXCEL.setBounds(466, 236, 51, 23);
+		contentPane.add(rdbtnEXCEL);
 		
 		JSeparator separator_2 = new JSeparator();
 		separator_2.setBounds(20, 275, 880, 2);
@@ -209,17 +242,20 @@ public class ConfiguracionConexion extends JFrame {
 		contentPane.add(lblNewLabel_15);
 		
 		textServidorOrigen = new JTextField();
+		textServidorOrigen.setText("TECNICO-PC\\SQLEXPRESS");
 		textServidorOrigen.setBounds(28, 329, 152, 20);
 		contentPane.add(textServidorOrigen);
 		textServidorOrigen.setColumns(10);
 		
 		textRutaDBF = new JTextField();
+		textRutaDBF.setEnabled(false);
 		textRutaDBF.setEditable(false);
 		textRutaDBF.setBounds(318, 329, 144, 20);
 		contentPane.add(textRutaDBF);
 		textRutaDBF.setColumns(10);
 		
 		textEjercicio = new JTextField();
+		textEjercicio.setText("2022");
 		textEjercicio.setBounds(75, 134, 105, 20);
 		contentPane.add(textEjercicio);
 		textEjercicio.setColumns(10);
@@ -229,9 +265,10 @@ public class ConfiguracionConexion extends JFrame {
 		contentPane.add(textAlmacenDestino);
 		textAlmacenDestino.setColumns(10);
 		
-		JButton btnNewButton_1 = new JButton("...");
-		btnNewButton_1.setBounds(466, 328, 45, 23);
-		contentPane.add(btnNewButton_1);
+		btnFicheroDBF = new JButton("...");
+		btnFicheroDBF.setEnabled(false);
+		btnFicheroDBF.setBounds(466, 328, 45, 23);
+		contentPane.add(btnFicheroDBF);
 		
 		JSeparator separator_4 = new JSeparator();
 		separator_4.setBounds(583, 292, 2, 200);
@@ -240,14 +277,16 @@ public class ConfiguracionConexion extends JFrame {
 		contentPane.add(separator_4);
 		
 		textRutaExcel = new JTextField();
+		textRutaExcel.setEnabled(false);
 		textRutaExcel.setEditable(false);
 		textRutaExcel.setBounds(651, 329, 155, 20);
 		contentPane.add(textRutaExcel);
 		textRutaExcel.setColumns(10);
 		
-		JButton btnNewButton_2 = new JButton("...");
-		btnNewButton_2.setBounds(810, 328, 45, 23);
-		contentPane.add(btnNewButton_2);
+		btnFicheroExcel = new JButton("...");
+		btnFicheroExcel.setEnabled(false);
+		btnFicheroExcel.setBounds(810, 328, 45, 23);
+		contentPane.add(btnFicheroExcel);
 		
 		JLabel lblNewLabel_16 = new JLabel("Usuario");
 		lblNewLabel_16.setBounds(28, 355, 36, 14);
@@ -260,11 +299,13 @@ public class ConfiguracionConexion extends JFrame {
 		contentPane.add(separator_3);
 		
 		textUsuarioOrigen = new JTextField();
+		textUsuarioOrigen.setText("sa");
 		textUsuarioOrigen.setBounds(28, 373, 74, 20);
 		contentPane.add(textUsuarioOrigen);
 		textUsuarioOrigen.setColumns(10);
 		
 		textClaveOrigen = new JTextField();
+		textClaveOrigen.setText("ew#211218");
 		textClaveOrigen.setBounds(106, 373, 74, 20);
 		contentPane.add(textClaveOrigen);
 		textClaveOrigen.setColumns(10);
@@ -274,37 +315,43 @@ public class ConfiguracionConexion extends JFrame {
 		contentPane.add(lblNewLabel_18);
 		
 		textNombreBD = new JTextField();
+		textNombreBD.setText("2022LD");
 		textNombreBD.setBounds(28, 415, 152, 20);
 		contentPane.add(textNombreBD);
 		textNombreBD.setColumns(10);
 		
-		JButton btnNewButton_3 = new JButton("Probar Conexión");
-		btnNewButton_3.addActionListener(new ActionListener() {
+		btnProbarConexionOrigen = new JButton("Probar Conexión");
+		btnProbarConexionOrigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				recogerConfSQL();
-				
+
+				probarConexionOrigen();
+
 				
 			}
 		});
-		btnNewButton_3.setBounds(48, 439, 113, 23);
-		contentPane.add(btnNewButton_3);
+		btnProbarConexionOrigen.setBounds(48, 439, 113, 23);
+		contentPane.add(btnProbarConexionOrigen);
 		
-		JRadioButton rdbtnNewRadioButton_3 = new JRadioButton("Tablas");
-		rdbtnNewRadioButton_3.setSelected(true);
-		Grupo2.add(rdbtnNewRadioButton_3);
-		rdbtnNewRadioButton_3.setBounds(28, 468, 57, 23);
-		contentPane.add(rdbtnNewRadioButton_3);
+		JRadioButton rdbtnTablas = new JRadioButton("Tablas");
+		rdbtnTablas.setSelected(true);
+		Grupo2.add(rdbtnTablas);
+		rdbtnTablas.setBounds(28, 468, 57, 23);
+		contentPane.add(rdbtnTablas);
 		
-		JRadioButton rdbtnNewRadioButton_4 = new JRadioButton("Vistas");
-		Grupo2.add(rdbtnNewRadioButton_4);
-		rdbtnNewRadioButton_4.setBounds(89, 468, 53, 23);
-		contentPane.add(rdbtnNewRadioButton_4);
+		JRadioButton rdbtnVistas = new JRadioButton("Vistas");
+		Grupo2.add(rdbtnVistas);
+		rdbtnVistas.setBounds(89, 468, 53, 23);
+		contentPane.add(rdbtnVistas);
 		
 		JLabel lblNewLabel_17 = new JLabel("Clave");
 		lblNewLabel_17.setBounds(106, 355, 27, 14);
 		contentPane.add(lblNewLabel_17);
 		
 		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btnCancelar.setBounds(247, 505, 89, 23);
 		contentPane.add(btnCancelar);
 		
@@ -313,6 +360,49 @@ public class ConfiguracionConexion extends JFrame {
 		contentPane.add(btnAtras);
 		
 		JButton btnSiguiente = new JButton("Siguiente");
+		btnSiguiente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				String ejercicio = textEjercicio.getText();
+				int digitosCuentas = Integer.parseInt(comboDigitosCuentas.getSelectedItem().toString());
+				int digitosGrupos = Integer.parseInt(comboDigitosGrupos.getSelectedItem().toString());
+				String almacen = textAlmacenDestino.getText();
+				
+				String tipoTablaOrigen = "Tablas";
+				
+				if(rdbtnTablas.isSelected()) {
+					tipoTablaOrigen = "Tablas";
+				}else if(rdbtnVistas.isSelected()) {
+					tipoTablaOrigen = "Vistas";
+				}
+				
+				miControlador.setEjercicio(ejercicio);
+				miControlador.setDigitosCuentas(digitosCuentas);
+				miControlador.setDigitosGrupos(digitosGrupos);
+				miControlador.setAlmacenDestino(almacen);
+				miControlador.setTipoTablaOrigen(tipoTablaOrigen);
+				
+				guardarConexionDestino();
+				guardarConexionOrigen();
+				
+				
+				if (rdbtnSQL.isSelected()) {
+					miControlador.vistaSQL();
+					miControlador.rellenaComboTablasOrigen();
+					miControlador.rellenaComboTablasDestino("SQL");
+					miControlador.rellenaTablaOrigen();
+					miControlador.rellenaTablaDestino();
+				}else if (rdbtnDBF.isSelected()) {
+					miControlador.vistaDBF();
+
+				}else if (rdbtnEXCEL.isSelected()) {
+					miControlador.vistaExel();
+
+				}
+				
+				
+			}
+		});
 		btnSiguiente.setBounds(558, 503, 89, 23);
 		contentPane.add(btnSiguiente);
 		
@@ -321,27 +411,185 @@ public class ConfiguracionConexion extends JFrame {
 		contentPane.add(separator_5);
 	}
 
-	protected void probarConexion() {
-		JOptionPane.showMessageDialog(this, "Zona en construcción.", 
-				"Error", JOptionPane.WARNING_MESSAGE);
-		return;
+	protected void probarConexionOrigen() {
+		String servidor = textServidorOrigen.getText().replace("\\", "%");
+		String [] partesConexion = servidor.split("%");
 		
-	}
-	
-
-	protected void recogerConfSQL() {
-		String servidorOrigen = textServidorOrigen.getText();
+		String ipServidorOrigen = partesConexion[0];
+		String instanciaOrigen = partesConexion[1];
 		String usuarioOrigen = textUsuarioOrigen.getText();
 		String claveOrigen = textClaveOrigen.getText();
-		String nombreBD = textNombreBD.getText();
-
-
-		Centro centro = new Centro(cod_centro, nombre, direccion);
-		controlador.insertaCentro(centro);
+		String nombreBDOrigen = textNombreBD.getText();
 		
+		String cadenaConexionOrigen = "jdbc:jtds:sqlserver://" + ipServidorOrigen + ";instance=" + instanciaOrigen + ";DatabaseName=[" + nombreBDOrigen + "]";
+		System.out.println(cadenaConexionOrigen+" "+usuarioOrigen+" "+claveOrigen);
+		miControlador.setConexionOrigen(cadenaConexionOrigen, usuarioOrigen, claveOrigen);
+		miControlador.testConexionOrigen();
+		 
+	}
+	
+	protected void guardarConexionOrigen() {
+		String servidor = textServidorOrigen.getText().replace("\\", "%");
+		String [] partesConexion = servidor.split("%");
+		
+		String ipServidorOrigen = partesConexion[0];
+		String instanciaOrigen = partesConexion[1];
+		String usuarioOrigen = textUsuarioOrigen.getText();
+		String claveOrigen = textClaveOrigen.getText();
+		String nombreBDOrigen = textNombreBD.getText();
+		
+		String cadenaConexionOrigen = "jdbc:jtds:sqlserver://" + ipServidorOrigen + ";instance=" + instanciaOrigen + ";DatabaseName=[" + nombreBDOrigen + "]";
+		System.out.println(cadenaConexionOrigen+" "+usuarioOrigen+" "+claveOrigen);
+		miControlador.setConexionOrigen(cadenaConexionOrigen, usuarioOrigen, claveOrigen);
+		
+		 
+	}
+	
+	
+
+	protected void probarConexionDestino() {
+		String servidor = textServidor.getText().replace("\\", "%");
+		String [] partesConexion = servidor.split("%");
+		
+		String ipServidorDestino = partesConexion[0];
+		String instanciaDestino = partesConexion[1];
+		String usuarioDestino = textUsuarioOrigen.getText();
+		String claveDestino = textClave.getText();
+		String empresa = textNumEmpresa.getText();
+		
+		String cadenaConexionDestino = "jdbc:jtds:sqlserver://" + ipServidorDestino + ";instance=" + instanciaDestino + ";DatabaseName=GpBusiness" + empresa;
+		System.out.println(cadenaConexionDestino+" "+usuarioDestino+" "+claveDestino);
+		miControlador.setConexionDestino(cadenaConexionDestino, usuarioDestino, claveDestino);
+		miControlador.testConexionDestino();
+
+		
+	}
+	
+	protected void guardarConexionDestino() {
+		String servidor = textServidor.getText().replace("\\", "%");
+		String [] partesConexion = servidor.split("%");
+		
+		String ipServidorDestino = partesConexion[0];
+		String instanciaDestino = partesConexion[1];
+		String usuarioDestino = textUsuarioOrigen.getText();
+		String claveDestino = textClave.getText();
+		String empresa = textNumEmpresa.getText();
+		
+		String cadenaConexionDestino = "jdbc:jtds:sqlserver://" + ipServidorDestino + ";instance=" + instanciaDestino + ";DatabaseName=GpBusiness" + empresa;
+		System.out.println(cadenaConexionDestino+" "+usuarioDestino+" "+claveDestino);
+		miControlador.setConexionDestino(cadenaConexionDestino, usuarioDestino, claveDestino);
+		
+
+		
+	}
+	
+	private void controlSeleccionOrigen() {
+		miControlador.controlSeleccionOrigen(rdbtnSQL, rdbtnDBF, rdbtnEXCEL);
+	}
+
+	public void setMiControlador(Controlador miControlador) {
+		this.miControlador=miControlador;
+		
+	}
+
+	public JTextField getTextServidorOrigen() {
+		return textServidorOrigen;
+	}
+
+	public void setTextServidorOrigen(JTextField textServidorOrigen) {
+		this.textServidorOrigen = textServidorOrigen;
+	}
+
+	public JTextField getTextRutaDBF() {
+		return textRutaDBF;
+	}
+
+	public void setTextRutaDBF(JTextField textRutaDBF) {
+		this.textRutaDBF = textRutaDBF;
+	}
+
+	public JTextField getTextRutaExcel() {
+		return textRutaExcel;
+	}
+
+	public void setTextRutaExcel(JTextField textRutaExcel) {
+		this.textRutaExcel = textRutaExcel;
+	}
+
+	public JTextField getTextUsuarioOrigen() {
+		return textUsuarioOrigen;
+	}
+
+	public void setTextUsuarioOrigen(JTextField textUsuarioOrigen) {
+		this.textUsuarioOrigen = textUsuarioOrigen;
+	}
+
+	public JTextField getTextClaveOrigen() {
+		return textClaveOrigen;
+	}
+
+	public void setTextClaveOrigen(JTextField textClaveOrigen) {
+		this.textClaveOrigen = textClaveOrigen;
+	}
+
+	public JTextField getTextNombreBD() {
+		return textNombreBD;
+	}
+
+	public void setTextNombreBD(JTextField textNombreBD) {
+		this.textNombreBD = textNombreBD;
+	}
+
+	public JRadioButton getRdbtnSQL() {
+		return rdbtnSQL;
+	}
+
+	public void setRdbtnSQL(JRadioButton rdbtnSQL) {
+		this.rdbtnSQL = rdbtnSQL;
+	}
+
+	public JRadioButton getRdbtnDBF() {
+		return rdbtnDBF;
+	}
+
+	public void setRdbtnDBF(JRadioButton rdbtnDBF) {
+		this.rdbtnDBF = rdbtnDBF;
+	}
+
+	public JRadioButton getRdbtnEXCEL() {
+		return rdbtnEXCEL;
+	}
+
+	public void setRdbtnEXCEL(JRadioButton rdbtnEXCEL) {
+		this.rdbtnEXCEL = rdbtnEXCEL;
+	}
+
+	public JButton getBtnProbarConexionOrigen() {
+		return btnProbarConexionOrigen;
+	}
+
+	public void setBtnProbarConexionOrigen(JButton btnProbarConexionOrigen) {
+		this.btnProbarConexionOrigen = btnProbarConexionOrigen;
+	}
+
+	public JButton getBtnFicheroExcel() {
+		return btnFicheroExcel;
+	}
+
+	public void setBtnFicheroExcel(JButton btnFicheroExcel) {
+		this.btnFicheroExcel = btnFicheroExcel;
+	}
+
+	public JButton getBtnFicheroDBF() {
+		return btnFicheroDBF;
+	}
+
+	public void setBtnFicheroDBF(JButton btnFicheroDBF) {
+		this.btnFicheroDBF = btnFicheroDBF;
 	}
 	
 	
 	
 	
+
 }

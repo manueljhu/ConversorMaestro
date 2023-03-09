@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import Controlador.Controlador;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -39,6 +41,7 @@ public class RelacionCampExcel extends JFrame {
 	private JButton btnCancelar;
 	private JButton btnAtras;
 	private JButton btnSiguiente;
+	private Controlador miControlador;
 
 	/**
 	 * Launch the application.
@@ -178,6 +181,7 @@ public class RelacionCampExcel extends JFrame {
 		btnAtras = new JButton("Atrás");
 		btnAtras.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				miControlador.inciarPrograma();
 			}
 		});
 		btnAtras.setEnabled(false);
@@ -192,4 +196,9 @@ public class RelacionCampExcel extends JFrame {
 		contentPane.add(btnSiguiente, "cell 4 7,alignx center");
 	}
 
+	public void setMiControlador(Controlador miControlador) {
+		this.miControlador=miControlador;
+		
+	}
+	
 }
