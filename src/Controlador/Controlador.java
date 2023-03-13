@@ -1,5 +1,6 @@
 package Controlador;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -8,12 +9,14 @@ import javax.swing.ButtonGroup;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import ConexionDAO.*;
 import Modelo.OpcionTablaDestino;
+import Modelo.Relacion;
 import Vista.*;
 import Modelo.RelacionCampos;
 
@@ -428,16 +431,16 @@ public class Controlador {
 	}
 
 	public void traspasoCamposEntreTablas(String origenDatos, int tipo) {
-		JTable tableColumOrigen;
-		JTable tableColumDestino;
-		JTable tableRelacionCampos;
+		JTable tableColumOrigen = null;
+		JTable tableColumDestino = null;
+		JTable tableRelacionCampos = null;
 		
 		DefaultTableModel cabeceraRelacion;
 		
 		String columnaOrigen = "";
         String columnaDestino = "";
         
-        int ultimaFilaRelacion;
+        int ultimaFilaRelacion = 0;
 		
 		switch(origenDatos) {
 		case "SQL":
@@ -460,23 +463,123 @@ public class Controlador {
 			break;
 		}
 		
+		ArrayList<Relacion> relacion = relacionCampos.getRelacionColumnas();
+		ultimaFilaRelacion = tableRelacionCampos.getRowCount()-1;
 		
 		switch(tipo) {
 		/**Cuando pulsamos el boton para mover de la tableColumOrigen hacia la tableRelacionCampos*/
 		case 1:
+			try {
+				columnaOrigen = (String) tableColumOrigen.getValueAt(tableColumOrigen.getSelectedRow(), tableColumOrigen.getSelectedColumn());
+				System.out.println(columnaOrigen);
+				
+				Relacion filaRelacion = new Relacion();
+				filaRelacion.setCampoOrigen(columnaOrigen);
+				filaRelacion.setCampoDestino("");
+				filaRelacion.setCampoOrigenRelleno(true);
+				filaRelacion.setCampoDestinoRelleno(false);
+				relacion.add(filaRelacion);
+				
+				refrescarTablaRelacion(tableRelacionCampos);
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+				JOptionPane.showMessageDialog(null, "Error al determinar el traspaso de datos de Origen\n " + e + ".",
+						"Aviso", JOptionPane.ERROR_MESSAGE);
+			}
 			
-			
+			 	
 			break;
 		/**Cuando pulsamos el boton para mover de la tableColumDestino hacia la tableRelacionCampos*/
 		case 2:
+			try {
+				if (relacion.size()==1) {
+					columnaDestino = (String) tableColumDestino.getValueAt(tableColumDestino.getSelectedRow(), 
+							tableColumDestino.getSelectedColumn());
+					relacion.get(ultimaFilaRelacion).setCampoDestino(columnaDestino);
+					refrescarTablaRelacion(tableRelacionCampos);
+					
+				}else {
+					
+					if (devuelveNFilasColumnaDestinoVacias(tableRelacionCampos)>1) {
+						if (tableRelacionCampos.getSelectedRowCount()!=0) {
+							columnaDestino = (String) tableColumDestino.getValueAt(tableColumDestino.getSelectedRow(), 
+									tableColumDestino.getSelectedColumn());
+							
+							relacion.get(tableRelacionCampos.getSelectedRow()).setCampoDestino(columnaDestino);
+							refrescarTablaRelacion(tableRelacionCampos);
+						}else {
+							JOptionPane.showMessageDialog(null, "No se ha seleccionado ninguna fila de la columna relacion\n ",
+									"Aviso", JOptionPane.ERROR_MESSAGE);
+						}
+					}else {
+						columnaDestino = (String) tableColumDestino.getValueAt(tableColumDestino.getSelectedRow(), 
+								tableColumDestino.getSelectedColumn());
+						
+						relacion.get(devuelvePosicionColumnaDestinoVacia(tableRelacionCampos)).setCampoDestino(columnaDestino);
+						refrescarTablaRelacion(tableRelacionCampos);
+					}
+					
+					
+				}
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+				JOptionPane.showMessageDialog(null, "Error al determinar el traspaso de datos de Destino\n " + e + ".",
+						"Aviso", JOptionPane.ERROR_MESSAGE);
+			}
+			
 			break;
 		}
 		
-		
+	
 		
 		
 	}
+	
+	public void refrescarTablaRelacion(JTable tablaRelacion) {
+		DefaultTableModel modelo = new DefaultTableModel();
+		
+		modelo.addColumn("Columna Origen");
+		modelo.addColumn("Columna Destino");
+		
+		String [] fila;
+		for (int i = 0; i < relacionCampos.getRelacionColumnas().size(); i++) {
+			
+			Relacion filaRelacion = relacionCampos.getRelacionColumnas().get(i);
+			
+			fila = new String [2];
+			fila[0] = filaRelacion.getCampoOrigen();
+			fila[1] = filaRelacion.getCampoDestino();
+			
+			modelo.addRow(fila);
+			
+		}
+		
+		tablaRelacion.setModel(modelo);
+	}
 
+	public int  devuelveNFilasColumnaDestinoVacias(JTable relacion) {
+		int filaVacia = 0;
+		for (int i = 0; i < relacionCampos.getRelacionColumnas().size(); i++) {
+			if (relacionCampos.getRelacionColumnas().get(i).getCampoDestino().equals("")) {
+				filaVacia++;
+			}
+		}
+		return filaVacia;
+	}
+	
+	public int  devuelvePosicionColumnaDestinoVacia(JTable relacion) {
+		int filaVacia = 0;
+		for (int i = 0; i < relacionCampos.getRelacionColumnas().size(); i++) {
+			if (relacionCampos.getRelacionColumnas().get(i).getCampoDestino().equals("")) {
+				filaVacia=i;
+			}
+		}
+		return filaVacia;
+	}
+	
+	
 	public void vistaSQL() {
 		RelacionCampSQL.setVisible(true);
 	}

@@ -141,7 +141,7 @@ public class RelacionCampSQL extends JFrame {
 		btnOriToRela.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				
+				controlador.traspasoCamposEntreTablas("SQL", 1);
 				
 				
 				
@@ -177,6 +177,15 @@ public class RelacionCampSQL extends JFrame {
 		scrollPane_2.setViewportView(tableRelacionCampos);
 		
 		JButton btnDestToRela = new JButton("<=");
+		btnDestToRela.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				controlador.traspasoCamposEntreTablas("SQL", 2);
+				
+				
+				
+			}
+		});
 		btnDestToRela.setPreferredSize(new Dimension(100, 300));
 		contentPane.add(btnDestToRela, "cell 5 3,alignx center");
 		
