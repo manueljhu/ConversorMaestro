@@ -25,6 +25,8 @@ import javax.swing.JSeparator;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
 import javax.swing.JCheckBox;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 /**
  * 
  * @author Ryder
@@ -67,6 +69,15 @@ public class RelacionCampDBF extends JFrame {
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
+		
+		JMenu mnNewMenu = new JMenu("Archivo");
+		menuBar.add(mnNewMenu);
+		
+		JMenuItem mntmGuardarRelacion = new JMenuItem("Guardar relación");
+		mnNewMenu.add(mntmGuardarRelacion);
+		
+		JMenuItem mntmRecuperarRelacion = new JMenuItem("Recuperar relación");
+		mnNewMenu.add(mntmRecuperarRelacion);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 

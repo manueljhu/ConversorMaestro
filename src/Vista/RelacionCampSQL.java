@@ -58,6 +58,7 @@ public class RelacionCampSQL extends JFrame {
 	private JFileChooser leerRelacion;
 	private JRadioButton rdbtnActualizar;
 	private JRadioButton rdbtnInsertar;
+	private JCheckBox chckbxVaciarDestino;
 
 	
 	
@@ -147,26 +148,21 @@ public class RelacionCampSQL extends JFrame {
 		btnBorrarRelacion = new JButton("Borrar Relacion");
 		btnBorrarRelacion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				
-				
-				
+				controlador.borrarRelacionSeleccionada("SQL");	
 				
 			}
 		});
-		btnBorrarRelacion.setEnabled(false);
 		contentPane.add(btnBorrarRelacion, "cell 2 2,alignx center");
 		
 		btnBorrarRelaciones = new JButton("Borrar Relaciones");
 		btnBorrarRelaciones.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				
+				controlador.borrarRelaciones("SQL");
 				
 				
 			}
 		});
-		btnBorrarRelaciones.setEnabled(false);
 		contentPane.add(btnBorrarRelaciones, "cell 4 2,alignx center");
 		
 		comboBoxDestino = new JComboBox();
@@ -255,7 +251,7 @@ public class RelacionCampSQL extends JFrame {
 		rdbtnInsertar.setHorizontalAlignment(SwingConstants.LEFT);
 		contentPane.add(rdbtnInsertar, "cell 4 4");
 		
-		JCheckBox chckbxVaciarDestino = new JCheckBox("Vaciar Destino");
+		chckbxVaciarDestino = new JCheckBox("Vaciar Destino");
 		chckbxVaciarDestino.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		contentPane.add(chckbxVaciarDestino, "cell 5 4");
 		
@@ -363,6 +359,16 @@ public class RelacionCampSQL extends JFrame {
 	public void setRdbtnInsertar(JRadioButton rdbtnInsertar) {
 		this.rdbtnInsertar = rdbtnInsertar;
 	}
+
+	public JCheckBox getChckbxVaciarDestino() {
+		return chckbxVaciarDestino;
+	}
+
+	public void setChckbxVaciarDestino(JCheckBox chckbxVaciarDestino) {
+		this.chckbxVaciarDestino = chckbxVaciarDestino;
+	}
+	
+	
 	
 	
 	

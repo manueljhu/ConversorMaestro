@@ -87,16 +87,16 @@ public class Controlador {
 	public void cerrarVentanaDBF() {
 		RelacionCampDBF.setVisible(false);
 	}
-	
+
 	public void cerrarVentanaExcel() {
-		RelacionCampExcel.setVisible(false);	
+		RelacionCampExcel.setVisible(false);
 	}
-	
+
 	public void cerrarVentanaSQL() {
 		RelacionCampSQL.setVisible(false);
-		
+
 	}
-	
+
 	public void setConexionDestino(String cadenaConexion, String usuario, String contrasena) {
 		conexion.setCadenaConexionDestino(cadenaConexion);
 		conexion.setUsuarioDestino(usuario);
@@ -377,7 +377,7 @@ public class Controlador {
 			modelo.addRow(fila);
 
 		}
-		
+
 		switch (tipoOrigen) {
 		case "SQL":
 			RelacionCampSQL.getTableColumOrigen().setModel(modelo);
@@ -392,8 +392,6 @@ public class Controlador {
 		default:
 			break;
 		}
-
-		
 
 	}
 
@@ -415,7 +413,7 @@ public class Controlador {
 			modelo.addRow(fila);
 
 		}
-		
+
 		switch (tipoOrigen) {
 		case "SQL":
 			RelacionCampSQL.getTableColumDestino().setModel(modelo);
@@ -429,7 +427,7 @@ public class Controlador {
 
 		default:
 			break;
-		}		
+		}
 
 	}
 
@@ -437,17 +435,17 @@ public class Controlador {
 		JTable tableColumOrigen = null;
 		JTable tableColumDestino = null;
 		JTable tableRelacionCampos = null;
-		
+
 		DefaultTableModel cabeceraRelacion;
-		
+
 		String columnaOrigen = "";
-        String columnaDestino = "";
-        
-        int ultimaFilaRelacion = 0;
-		
-		switch(origenDatos) {
+		String columnaDestino = "";
+
+		int ultimaFilaRelacion = 0;
+
+		switch (origenDatos) {
 		case "SQL":
-			tableColumOrigen =  RelacionCampSQL.getTableColumOrigen();
+			tableColumOrigen = RelacionCampSQL.getTableColumOrigen();
 			tableColumDestino = RelacionCampSQL.getTableColumDestino();
 			tableRelacionCampos = RelacionCampSQL.getTableRelacionCampos();
 			cabeceraRelacion = (DefaultTableModel) tableRelacionCampos.getModel();
@@ -461,108 +459,142 @@ public class Controlador {
 			tableColumOrigen = null;
 			tableColumDestino = null;
 			tableRelacionCampos = null;
-			cabeceraRelacion= null;
+			cabeceraRelacion = null;
 			ultimaFilaRelacion = 0;
 			break;
 		}
-		
+
 		ArrayList<Relacion> relacion = relacionCampos.getRelacionColumnas();
-		ultimaFilaRelacion = tableRelacionCampos.getRowCount()-1;
-		
-		switch(tipo) {
-		/**Cuando pulsamos el boton para mover de la tableColumOrigen hacia la tableRelacionCampos*/
+
+		ultimaFilaRelacion = tableRelacionCampos.getRowCount() - 1;
+
+		switch (tipo) {
+		/**
+		 * Cuando pulsamos el boton para mover de la tableColumOrigen hacia la
+		 * tableRelacionCampos
+		 */
 		case 1:
 			try {
-				columnaOrigen = (String) tableColumOrigen.getValueAt(tableColumOrigen.getSelectedRow(), tableColumOrigen.getSelectedColumn());
-				System.out.println(columnaOrigen);
-				
-				Relacion filaRelacion = new Relacion();
-				filaRelacion.setCampoOrigen(columnaOrigen);
-				filaRelacion.setCampoDestino("");
-				filaRelacion.setCampoOrigenRelleno(true);
-				filaRelacion.setCampoDestinoRelleno(false);
-				relacion.add(filaRelacion);
-				
-				refrescarTablaRelacion(tableRelacionCampos);
-				
+
+				if (tableRelacionCampos.getSelectedRowCount() > 0) {
+					columnaOrigen = (String) tableColumOrigen.getValueAt(tableColumOrigen.getSelectedRow(),
+							tableColumOrigen.getSelectedColumn());
+
+					Relacion filaRelacion = relacion.get(tableRelacionCampos.getSelectedRow());
+
+					if (filaRelacion.getCampoDestino().equals("")) {
+						filaRelacion.setCampoOrigen(columnaOrigen);
+						filaRelacion.setCampoDestino("");
+						filaRelacion.setCampoOrigenRelleno(true);
+						filaRelacion.setCampoDestinoRelleno(false);
+
+						refrescarTablaRelacion(tableRelacionCampos);
+					} else {
+						filaRelacion.setCampoOrigen(columnaOrigen);
+						filaRelacion.setCampoOrigenRelleno(true);
+
+						refrescarTablaRelacion(tableRelacionCampos);
+					}
+
+				} else {
+					columnaOrigen = (String) tableColumOrigen.getValueAt(tableColumOrigen.getSelectedRow(),
+							tableColumOrigen.getSelectedColumn());
+					System.out.println(columnaOrigen);
+
+					Relacion filaRelacion = new Relacion();
+					filaRelacion.setCampoOrigen(columnaOrigen);
+					filaRelacion.setCampoDestino("");
+					filaRelacion.setCampoOrigenRelleno(true);
+					filaRelacion.setCampoDestinoRelleno(false);
+					relacion.add(filaRelacion);
+
+					refrescarTablaRelacion(tableRelacionCampos);
+				}
+
 			} catch (Exception e) {
 				// TODO: handle exception
 				JOptionPane.showMessageDialog(null, "Error al determinar el traspaso de datos de Origen\n " + e + ".",
 						"Aviso", JOptionPane.ERROR_MESSAGE);
 			}
-			
-			 	
+
 			break;
-		/**Cuando pulsamos el boton para mover de la tableColumDestino hacia la tableRelacionCampos*/
+		/**
+		 * Cuando pulsamos el boton para mover de la tableColumDestino hacia la
+		 * tableRelacionCampos
+		 */
 		case 2:
 			try {
-				if (relacion.size()==1) {
-					columnaDestino = (String) tableColumDestino.getValueAt(tableColumDestino.getSelectedRow(), 
+				if (relacion.size() == 1) {
+					columnaDestino = (String) tableColumDestino.getValueAt(tableColumDestino.getSelectedRow(),
 							tableColumDestino.getSelectedColumn());
 					relacion.get(ultimaFilaRelacion).setCampoDestino(columnaDestino);
 					refrescarTablaRelacion(tableRelacionCampos);
-					
-				}else {
-					
-					if (devuelveNFilasColumnaDestinoVacias(tableRelacionCampos)>1) {
-						if (tableRelacionCampos.getSelectedRowCount()!=0) {
-							columnaDestino = (String) tableColumDestino.getValueAt(tableColumDestino.getSelectedRow(), 
+
+				} else {
+
+					if (devuelveNFilasColumnaDestinoVacias(tableRelacionCampos) > 1) {
+						if (tableRelacionCampos.getSelectedRowCount() != 0) {
+							columnaDestino = (String) tableColumDestino.getValueAt(tableColumDestino.getSelectedRow(),
 									tableColumDestino.getSelectedColumn());
-							
+
 							relacion.get(tableRelacionCampos.getSelectedRow()).setCampoDestino(columnaDestino);
+
 							refrescarTablaRelacion(tableRelacionCampos);
-						}else {
-							JOptionPane.showMessageDialog(null, "No se ha seleccionado ninguna fila de la columna relacion\n ",
-									"Aviso", JOptionPane.ERROR_MESSAGE);
+						} else {
+							JOptionPane.showMessageDialog(null,
+									"No se ha seleccionado ninguna fila de la columna relacion\n ", "Aviso",
+									JOptionPane.ERROR_MESSAGE);
 						}
-					}else {
-						columnaDestino = (String) tableColumDestino.getValueAt(tableColumDestino.getSelectedRow(), 
+					} else {
+						columnaDestino = (String) tableColumDestino.getValueAt(tableColumDestino.getSelectedRow(),
 								tableColumDestino.getSelectedColumn());
-						
-						relacion.get(devuelvePosicionColumnaDestinoVacia(tableRelacionCampos)).setCampoDestino(columnaDestino);
+
+						if (relacion.get(devuelvePosicionColumnaDestinoVacia(tableRelacionCampos)).getCampoDestino()
+								.equals("")) {
+							relacion.get(devuelvePosicionColumnaDestinoVacia(tableRelacionCampos))
+									.setCampoDestino(columnaDestino);
+						}
+
 						refrescarTablaRelacion(tableRelacionCampos);
+
 					}
-					
-					
+
 				}
-				
+
 			} catch (Exception e) {
 				// TODO: handle exception
 				JOptionPane.showMessageDialog(null, "Error al determinar el traspaso de datos de Destino\n " + e + ".",
 						"Aviso", JOptionPane.ERROR_MESSAGE);
 			}
-			
+
 			break;
 		}
-		
-	
-		
-		
+
 	}
-	
+
 	public void refrescarTablaRelacion(JTable tablaRelacion) {
 		DefaultTableModel modelo = new DefaultTableModel();
-		
+
 		modelo.addColumn("Columna Origen");
 		modelo.addColumn("Columna Destino");
-		
-		String [] fila;
+
+		String[] fila;
 		for (int i = 0; i < relacionCampos.getRelacionColumnas().size(); i++) {
-			
+
 			Relacion filaRelacion = relacionCampos.getRelacionColumnas().get(i);
-			
-			fila = new String [2];
+
+			fila = new String[2];
 			fila[0] = filaRelacion.getCampoOrigen();
 			fila[1] = filaRelacion.getCampoDestino();
-			
+
 			modelo.addRow(fila);
-			
+
 		}
-		
+
 		tablaRelacion.setModel(modelo);
 	}
 
-	public int  devuelveNFilasColumnaDestinoVacias(JTable relacion) {
+	public int devuelveNFilasColumnaDestinoVacias(JTable relacion) {
 		int filaVacia = 0;
 		for (int i = 0; i < relacionCampos.getRelacionColumnas().size(); i++) {
 			if (relacionCampos.getRelacionColumnas().get(i).getCampoDestino().equals("")) {
@@ -571,53 +603,114 @@ public class Controlador {
 		}
 		return filaVacia;
 	}
-	
-	public int  devuelvePosicionColumnaDestinoVacia(JTable relacion) {
+
+	public int devuelvePosicionColumnaDestinoVacia(JTable relacion) {
 		int filaVacia = 0;
+
 		for (int i = 0; i < relacionCampos.getRelacionColumnas().size(); i++) {
 			if (relacionCampos.getRelacionColumnas().get(i).getCampoDestino().equals("")) {
-				filaVacia=i;
+				filaVacia = i;
+
 			}
 		}
+
 		return filaVacia;
 	}
+
+	public void borrarRelacionSeleccionada(String tipo) {
+		JTable tableRelacionCampos = null;
+		switch (tipo) {
+		case "SQL":
+			tableRelacionCampos = RelacionCampSQL.getTableRelacionCampos();
+			break;
+		case "DBF":
+
+			break;
+		case "Excel":
+
+			break;
+		}
+
+		ArrayList<Relacion> relacion = relacionCampos.getRelacionColumnas();
+		
+
+		if (tableRelacionCampos.getRowCount() > 0) {
+			if (tableRelacionCampos.getSelectedRowCount() == 1) {
+				relacion.remove(tableRelacionCampos.getSelectedRow());
+			} else {
+				JOptionPane.showMessageDialog(RelacionCampSQL, "No se ha seleccionado ninguna relación.", "Aviso",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+		} else {
+			JOptionPane.showMessageDialog(RelacionCampSQL, "No existen relaciones para borrar.", "Aviso",
+					JOptionPane.INFORMATION_MESSAGE);
+		}
+
+		refrescarTablaRelacion(tableRelacionCampos);
+
+	}
 	
+	public void borrarRelaciones(String tipo) {
+		JTable tableRelacionCampos = null;
+		switch (tipo) {
+		case "SQL":
+			tableRelacionCampos = RelacionCampSQL.getTableRelacionCampos();
+			break;
+		case "DBF":
+
+			break;
+		case "Excel":
+
+			break;
+		}
+		
+		ArrayList<Relacion> relacion = relacionCampos.getRelacionColumnas();
+		
+		if (tableRelacionCampos.getRowCount()>0) {
+			relacion.clear();
+			
+		}else {
+			JOptionPane.showMessageDialog(RelacionCampSQL, "No existen relaciones para borrar.", "Aviso",
+					JOptionPane.INFORMATION_MESSAGE);
+		}
+		refrescarTablaRelacion(tableRelacionCampos);
+	}
+
 	public void guardarFicheroRelacion(String ruta, String origen) {
 		FileWriter fichero = null;
 		PrintWriter pw = null;
-		
+
 		JComboBox tablaOrigen;
 		JComboBox tablaDestino;
-		
+
 		JRadioButton actualizar;
 		JRadioButton insertar;
-		
+
 		JCheckBox vaciarDestino;
-		
-		
+
 		switch (origen) {
-		case "SQL": 
+		case "SQL":
 			tablaOrigen = RelacionCampSQL.getComboBoxOrigen();
 			tablaDestino = RelacionCampSQL.getComboBoxDestino();
-			actualizar = RelacionCampSQL.ge
+			actualizar = RelacionCampSQL.getRdbtnActualizar();
+			insertar = RelacionCampSQL.getRdbtnInsertar();
+			vaciarDestino = RelacionCampSQL.getChckbxVaciarDestino();
 			break;
 		case "DBF":
 			break;
-		case "Excel": 
+		case "Excel":
 			break;
 		}
-		
+
 		try {
 			fichero = new FileWriter(ruta);
 			pw = new PrintWriter(fichero);
-			
-			
+
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 	}
-	
-	
+
 	public void vistaSQL() {
 		RelacionCampSQL.setVisible(true);
 	}
@@ -670,7 +763,4 @@ public class Controlador {
 		this.tipoTablaOrigen = tipoTablaOrigen;
 	}
 
-	
-	
-	
 }
