@@ -1,5 +1,7 @@
 package Controlador;
 
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -8,6 +10,7 @@ import javax.management.modelmbean.ModelMBean;
 import javax.swing.ButtonGroup;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
@@ -577,6 +580,40 @@ public class Controlador {
 			}
 		}
 		return filaVacia;
+	}
+	
+	public void guardarFicheroRelacion(String ruta, String origen) {
+		FileWriter fichero = null;
+		PrintWriter pw = null;
+		
+		JComboBox tablaOrigen;
+		JComboBox tablaDestino;
+		
+		JRadioButton actualizar;
+		JRadioButton insertar;
+		
+		JCheckBox vaciarDestino;
+		
+		
+		switch (origen) {
+		case "SQL": 
+			tablaOrigen = RelacionCampSQL.getComboBoxOrigen();
+			tablaDestino = RelacionCampSQL.getComboBoxDestino();
+			break;
+		case "DBF":
+			break;
+		case "Excel": 
+			break;
+		}
+		
+		try {
+			fichero = new FileWriter(ruta);
+			pw = new PrintWriter(fichero);
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 	
 	

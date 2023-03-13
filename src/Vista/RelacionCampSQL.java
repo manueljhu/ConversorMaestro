@@ -11,6 +11,8 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+
 import java.awt.Dimension;
 import javax.swing.JButton;
 import javax.swing.JTextPane;
@@ -29,6 +31,8 @@ import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.JScrollBar;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 /**
  * 
  * @author Ryder
@@ -50,6 +54,13 @@ public class RelacionCampSQL extends JFrame {
 	private JTable tableColumOrigen;
 	private JTable tableColumDestino;
 	private JTable tableRelacionCampos;
+	private JFileChooser guardarRelacion;
+	private JFileChooser leerRelacion;
+	private JRadioButton rdbtnActualizar;
+	private JRadioButton rdbtnInsertar;
+
+	
+	
 
 	/**
 	 * Launch the application.
@@ -76,6 +87,35 @@ public class RelacionCampSQL extends JFrame {
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
+		
+		JMenu mnNewMenu = new JMenu("Archivo");
+		menuBar.add(mnNewMenu);
+		
+		JMenuItem mntmGuardarRelacion = new JMenuItem("Guardar Relacion");
+		mntmGuardarRelacion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				guardarRelacion.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+				String rutaGuardado ="";
+				try {
+					if (guardarRelacion.showSaveDialog(null)==guardarRelacion.APPROVE_OPTION) {
+						rutaGuardado = guardarRelacion.getSelectedFile().getAbsolutePath()+".crin";
+					}
+				} catch (Exception e2) {
+					// TODO: handle exception
+				}
+			}
+		});
+		mnNewMenu.add(mntmGuardarRelacion);
+		
+		JMenuItem mntmRecuperarRElacion = new JMenuItem("Recuperar Relacion");
+		mntmRecuperarRElacion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				
+			}
+		});
+		mnNewMenu.add(mntmRecuperarRElacion);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -107,6 +147,7 @@ public class RelacionCampSQL extends JFrame {
 		btnBorrarRelacion = new JButton("Borrar Relacion");
 		btnBorrarRelacion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				
 				
 				
@@ -202,13 +243,13 @@ public class RelacionCampSQL extends JFrame {
 		));
 		scrollPane_1.setViewportView(tableColumDestino);
 		
-		JRadioButton rdbtnActualizar = new JRadioButton("Actualizar");
+		rdbtnActualizar = new JRadioButton("Actualizar");
 		rdbtnActualizar.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		buttonGroup.add(rdbtnActualizar);
 		rdbtnActualizar.setSelected(true);
 		contentPane.add(rdbtnActualizar, "flowx,cell 2 4,alignx right");
 		
-		JRadioButton rdbtnInsertar = new JRadioButton("Insertar");
+		rdbtnInsertar = new JRadioButton("Insertar");
 		buttonGroup.add(rdbtnInsertar);
 		rdbtnInsertar.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		rdbtnInsertar.setHorizontalAlignment(SwingConstants.LEFT);
@@ -249,6 +290,11 @@ public class RelacionCampSQL extends JFrame {
 		});
 		btnSiguiente.setEnabled(false);
 		contentPane.add(btnSiguiente, "cell 4 6,alignx center");
+		
+		guardarRelacion = new JFileChooser();
+		guardarRelacion.setDialogType(JFileChooser.OPEN_DIALOG);
+		guardarRelacion.setDialogTitle("Selcciona donde guardar el fichero");
+		
 		
 		
 	}
@@ -301,5 +347,23 @@ public class RelacionCampSQL extends JFrame {
 	public void setTableRelacionCampos(JTable tableRelacionCampos) {
 		this.tableRelacionCampos = tableRelacionCampos;
 	}
+
+	public JRadioButton getRdbtnActualizar() {
+		return rdbtnActualizar;
+	}
+
+	public void setRdbtnActualizar(JRadioButton rdbtnActualizar) {
+		this.rdbtnActualizar = rdbtnActualizar;
+	}
+
+	public JRadioButton getRdbtnInsertar() {
+		return rdbtnInsertar;
+	}
+
+	public void setRdbtnInsertar(JRadioButton rdbtnInsertar) {
+		this.rdbtnInsertar = rdbtnInsertar;
+	}
+	
+	
 	
 }
