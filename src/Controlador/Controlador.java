@@ -599,6 +599,7 @@ public class Controlador {
 		case "SQL": 
 			tablaOrigen = RelacionCampSQL.getComboBoxOrigen();
 			tablaDestino = RelacionCampSQL.getComboBoxDestino();
+			actualizar = RelacionCampSQL.ge
 			break;
 		case "DBF":
 			break;
@@ -669,4 +670,7 @@ public class Controlador {
 		this.tipoTablaOrigen = tipoTablaOrigen;
 	}
 
+	
+	
+	
 }
