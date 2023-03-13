@@ -43,7 +43,7 @@ public class ConfiguracionConexion extends JFrame {
 	private JTextField textNombreBD;
 	private final ButtonGroup Grupo1 = new ButtonGroup();
 	private final ButtonGroup Grupo2 = new ButtonGroup();
-	private Controlador miControlador;
+	private Controlador controlador;
 	private JRadioButton rdbtnSQL;
 	private JRadioButton rdbtnDBF;
 	private JRadioButton rdbtnEXCEL;
@@ -350,14 +350,11 @@ public class ConfiguracionConexion extends JFrame {
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
 			}
 		});
-		btnCancelar.setBounds(247, 505, 89, 23);
+		btnCancelar.setBounds(288, 503, 89, 23);
 		contentPane.add(btnCancelar);
-		
-		JButton btnAtras = new JButton("Atrás");
-		btnAtras.setBounds(398, 505, 89, 23);
-		contentPane.add(btnAtras);
 		
 		JButton btnSiguiente = new JButton("Siguiente");
 		btnSiguiente.addActionListener(new ActionListener() {
@@ -376,34 +373,34 @@ public class ConfiguracionConexion extends JFrame {
 					tipoTablaOrigen = "Vistas";
 				}
 				
-				miControlador.setEjercicio(ejercicio);
-				miControlador.setDigitosCuentas(digitosCuentas);
-				miControlador.setDigitosGrupos(digitosGrupos);
-				miControlador.setAlmacenDestino(almacen);
-				miControlador.setTipoTablaOrigen(tipoTablaOrigen);
+				controlador.setEjercicio(ejercicio);
+				controlador.setDigitosCuentas(digitosCuentas);
+				controlador.setDigitosGrupos(digitosGrupos);
+				controlador.setAlmacenDestino(almacen);
+				controlador.setTipoTablaOrigen(tipoTablaOrigen);
 				
 				guardarConexionDestino();
 				guardarConexionOrigen();
 				
 				
 				if (rdbtnSQL.isSelected()) {
-					miControlador.vistaSQL();
-					miControlador.rellenaComboTablasOrigen();
-					miControlador.rellenaComboTablasDestino("SQL");
-					miControlador.rellenaTablaOrigen();
-					miControlador.rellenaTablaDestino();
+					controlador.vistaSQL();
+					controlador.rellenaComboTablasOrigen();
+					controlador.rellenaComboTablasDestino("SQL");
+					controlador.rellenaTablaOrigen("SQL");
+					controlador.rellenaTablaDestino("SQL");
 				}else if (rdbtnDBF.isSelected()) {
-					miControlador.vistaDBF();
+					controlador.vistaDBF();
 
 				}else if (rdbtnEXCEL.isSelected()) {
-					miControlador.vistaExel();
+					controlador.vistaExel();
 
 				}
 				
 				
 			}
 		});
-		btnSiguiente.setBounds(558, 503, 89, 23);
+		btnSiguiente.setBounds(447, 503, 89, 23);
 		contentPane.add(btnSiguiente);
 		
 		JSeparator separator_5 = new JSeparator();
@@ -422,9 +419,9 @@ public class ConfiguracionConexion extends JFrame {
 		String nombreBDOrigen = textNombreBD.getText();
 		
 		String cadenaConexionOrigen = "jdbc:jtds:sqlserver://" + ipServidorOrigen + ";instance=" + instanciaOrigen + ";DatabaseName=[" + nombreBDOrigen + "]";
-		System.out.println(cadenaConexionOrigen+" "+usuarioOrigen+" "+claveOrigen);
-		miControlador.setConexionOrigen(cadenaConexionOrigen, usuarioOrigen, claveOrigen);
-		miControlador.testConexionOrigen();
+		//System.out.println(cadenaConexionOrigen+" "+usuarioOrigen+" "+claveOrigen);
+		controlador.setConexionOrigen(cadenaConexionOrigen, usuarioOrigen, claveOrigen);
+		controlador.testConexionOrigen();
 		 
 	}
 	
@@ -440,7 +437,7 @@ public class ConfiguracionConexion extends JFrame {
 		
 		String cadenaConexionOrigen = "jdbc:jtds:sqlserver://" + ipServidorOrigen + ";instance=" + instanciaOrigen + ";DatabaseName=[" + nombreBDOrigen + "]";
 		System.out.println(cadenaConexionOrigen+" "+usuarioOrigen+" "+claveOrigen);
-		miControlador.setConexionOrigen(cadenaConexionOrigen, usuarioOrigen, claveOrigen);
+		controlador.setConexionOrigen(cadenaConexionOrigen, usuarioOrigen, claveOrigen);
 		
 		 
 	}
@@ -458,9 +455,9 @@ public class ConfiguracionConexion extends JFrame {
 		String empresa = textNumEmpresa.getText();
 		
 		String cadenaConexionDestino = "jdbc:jtds:sqlserver://" + ipServidorDestino + ";instance=" + instanciaDestino + ";DatabaseName=GpBusiness" + empresa;
-		System.out.println(cadenaConexionDestino+" "+usuarioDestino+" "+claveDestino);
-		miControlador.setConexionDestino(cadenaConexionDestino, usuarioDestino, claveDestino);
-		miControlador.testConexionDestino();
+		//System.out.println(cadenaConexionDestino+" "+usuarioDestino+" "+claveDestino);
+		controlador.setConexionDestino(cadenaConexionDestino, usuarioDestino, claveDestino);
+		controlador.testConexionDestino();
 
 		
 	}
@@ -477,18 +474,18 @@ public class ConfiguracionConexion extends JFrame {
 		
 		String cadenaConexionDestino = "jdbc:jtds:sqlserver://" + ipServidorDestino + ";instance=" + instanciaDestino + ";DatabaseName=GpBusiness" + empresa;
 		System.out.println(cadenaConexionDestino+" "+usuarioDestino+" "+claveDestino);
-		miControlador.setConexionDestino(cadenaConexionDestino, usuarioDestino, claveDestino);
+		controlador.setConexionDestino(cadenaConexionDestino, usuarioDestino, claveDestino);
 		
 
 		
 	}
 	
 	private void controlSeleccionOrigen() {
-		miControlador.controlSeleccionOrigen(rdbtnSQL, rdbtnDBF, rdbtnEXCEL);
+		controlador.controlSeleccionOrigen(rdbtnSQL, rdbtnDBF, rdbtnEXCEL);
 	}
 
-	public void setMiControlador(Controlador miControlador) {
-		this.miControlador=miControlador;
+	public void controlador(Controlador controlador) {
+		this.controlador=controlador;
 		
 	}
 

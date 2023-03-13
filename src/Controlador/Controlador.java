@@ -64,10 +64,10 @@ public class Controlador {
 		ResumenTraspaso = new ResumenTraspaso();
 		conexion = new daoConexionSQL(this);
 
-		configuracionConexion.setMiControlador(this);
-		RelacionCampSQL.setMiControlador(this);
-		RelacionCampDBF.setMiControlador(this);
-		RelacionCampExcel.setMiControlador(this);
+		configuracionConexion.controlador(this);
+		RelacionCampSQL.setControlador(this);
+		RelacionCampDBF.setControlador(this);
+		RelacionCampExcel.setControlador(this);
 
 		// Creamos los objetos DAO
 //			sancionDAO = new SancionDAO();
@@ -78,6 +78,19 @@ public class Controlador {
 		configuracionConexion.setVisible(true);
 	}
 
+	public void cerrarVentanaDBF() {
+		RelacionCampDBF.setVisible(false);
+	}
+	
+	public void cerrarVentanaExcel() {
+		RelacionCampExcel.setVisible(false);	
+	}
+	
+	public void cerrarVentanaSQL() {
+		RelacionCampSQL.setVisible(false);
+		
+	}
+	
 	public void setConexionDestino(String cadenaConexion, String usuario, String contrasena) {
 		conexion.setCadenaConexionDestino(cadenaConexion);
 		conexion.setUsuarioDestino(usuario);
@@ -341,7 +354,7 @@ public class Controlador {
 		comboTablasDestino.setModel(modelo);
 	}
 
-	public void rellenaTablaOrigen() {
+	public void rellenaTablaOrigen(String tipoOrigen) {
 		String nombreTabla = RelacionCampSQL.getComboBoxOrigen().getSelectedItem().toString();
 
 		ArrayList<String> columnas = conexion.devuelveColumnasTabla(nombreTabla, "Origen");
@@ -358,12 +371,27 @@ public class Controlador {
 			modelo.addRow(fila);
 
 		}
+		
+		switch (tipoOrigen) {
+		case "SQL":
+			RelacionCampSQL.getTableColumOrigen().setModel(modelo);
+			break;
+		case "DBF":
 
-		RelacionCampSQL.getTableColumOrigen().setModel(modelo);
+			break;
+		case "Excel":
+
+			break;
+
+		default:
+			break;
+		}
+
+		
 
 	}
 
-	public void rellenaTablaDestino() {
+	public void rellenaTablaDestino(String tipoOrigen) {
 		int indexTabla = RelacionCampSQL.getComboBoxDestino().getSelectedIndex();
 		String nombreTabla = tablasDestino.get(indexTabla).getTabla();
 
@@ -381,8 +409,21 @@ public class Controlador {
 			modelo.addRow(fila);
 
 		}
+		
+		switch (tipoOrigen) {
+		case "SQL":
+			RelacionCampSQL.getTableColumDestino().setModel(modelo);
+			break;
+		case "DBF":
 
-		RelacionCampSQL.getTableColumDestino().setModel(modelo);
+			break;
+		case "Excel":
+
+			break;
+
+		default:
+			break;
+		}		
 
 	}
 
@@ -423,6 +464,7 @@ public class Controlador {
 		switch(tipo) {
 		/**Cuando pulsamos el boton para mover de la tableColumOrigen hacia la tableRelacionCampos*/
 		case 1:
+			
 			
 			break;
 		/**Cuando pulsamos el boton para mover de la tableColumDestino hacia la tableRelacionCampos*/

@@ -45,7 +45,7 @@ public class RelacionCampSQL extends JFrame {
 	private JButton btnCancelar;
 	private JButton btnAtras;
 	private JButton btnSiguiente;
-	private Controlador miControlador;
+	private Controlador controlador;
 	private JComboBox comboBoxDestino;
 	private JTable tableColumOrigen;
 	private JTable tableColumDestino;
@@ -71,7 +71,7 @@ public class RelacionCampSQL extends JFrame {
 	 * Create the frame.
 	 */
 	public RelacionCampSQL() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1361, 783);
 		
 		JMenuBar menuBar = new JMenuBar();
@@ -98,7 +98,7 @@ public class RelacionCampSQL extends JFrame {
 		comboBoxOrigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				miControlador.rellenaTablaOrigen();
+				controlador.rellenaTablaOrigen("SQL");
 			}
 		});
 		comboBoxOrigen.setMinimumSize(new Dimension(0, 0));
@@ -131,7 +131,7 @@ public class RelacionCampSQL extends JFrame {
 		comboBoxDestino = new JComboBox();
 		comboBoxDestino.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				miControlador.rellenaTablaDestino();
+				controlador.rellenaTablaDestino("SQL");
 			}
 		});
 		comboBoxDestino.setMinimumSize(new Dimension(0, 0));
@@ -217,20 +217,16 @@ public class RelacionCampSQL extends JFrame {
 		
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				
-				
-				
+			public void actionPerformed(ActionEvent e) {				
+				controlador.cerrarVentanaSQL();
 			}
 		});
-		btnCancelar.setEnabled(false);
 		contentPane.add(btnCancelar, "cell 2 6,alignx center");
 		
 		btnAtras = new JButton("Atrás");
 		btnAtras.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {				
-				miControlador.inciarPrograma();
+				controlador.inciarPrograma();
 
 			}
 		});
@@ -249,11 +245,11 @@ public class RelacionCampSQL extends JFrame {
 	}
 	
 	private void rellenarComboTablasOrigen() {
-		miControlador.rellenaComboTablasOrigen();
+		controlador.rellenaComboTablasOrigen();
 	}
 
-	public void setMiControlador(Controlador miControlador) {
-		this.miControlador=miControlador;
+	public void setControlador(Controlador controlador) {
+		this.controlador=controlador;
 		
 	}
 
@@ -296,16 +292,5 @@ public class RelacionCampSQL extends JFrame {
 	public void setTableRelacionCampos(JTable tableRelacionCampos) {
 		this.tableRelacionCampos = tableRelacionCampos;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }

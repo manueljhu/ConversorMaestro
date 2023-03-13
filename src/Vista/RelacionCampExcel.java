@@ -41,7 +41,7 @@ public class RelacionCampExcel extends JFrame {
 	private JButton btnCancelar;
 	private JButton btnAtras;
 	private JButton btnSiguiente;
-	private Controlador miControlador;
+	private Controlador controlador;
 
 	/**
 	 * Launch the application.
@@ -63,7 +63,6 @@ public class RelacionCampExcel extends JFrame {
 	 * Create the frame.
 	 */
 	public RelacionCampExcel() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1361, 783);
 		
 		JMenuBar menuBar = new JMenuBar();
@@ -169,19 +168,15 @@ public class RelacionCampExcel extends JFrame {
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				
-				
-				
+				controlador.cerrarVentanaExcel();
 			}
 		});
-		btnCancelar.setEnabled(false);
 		contentPane.add(btnCancelar, "cell 2 7,alignx center");
 		
 		btnAtras = new JButton("Atrás");
 		btnAtras.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				miControlador.inciarPrograma();
+				controlador.inciarPrograma();
 			}
 		});
 		btnAtras.setEnabled(false);
@@ -196,8 +191,8 @@ public class RelacionCampExcel extends JFrame {
 		contentPane.add(btnSiguiente, "cell 4 7,alignx center");
 	}
 
-	public void setMiControlador(Controlador miControlador) {
-		this.miControlador=miControlador;
+	public void setControlador(Controlador controlador) {
+		this.controlador=controlador;
 		
 	}
 	
