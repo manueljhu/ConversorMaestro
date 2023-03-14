@@ -383,17 +383,24 @@ public class ConfiguracionConexion extends JFrame {
 				guardarConexionOrigen();
 				
 				
-				if (rdbtnSQL.isSelected()) {
+				if (rdbtnSQL.isSelected()) {				
 					controlador.vistaSQL();
-					controlador.rellenaComboTablasOrigen();
+					controlador.rellenaComboTablasOrigen();					
 					controlador.rellenaComboTablasDestino("SQL");
 					controlador.rellenaTablaOrigen("SQL");
 					controlador.rellenaTablaDestino("SQL");
+					
 				}else if (rdbtnDBF.isSelected()) {
 					controlador.vistaDBF();
+					controlador.rellenaComboTablasDestino("DBF");
+					controlador.rellenaTablaOrigen("DBF");
+					controlador.rellenaTablaDestino("DBF");
 
 				}else if (rdbtnEXCEL.isSelected()) {
 					controlador.vistaExel();
+					controlador.rellenaComboTablasDestino("Excel");
+					controlador.rellenaTablaOrigen("Excel");
+					controlador.rellenaTablaDestino("Excel");
 
 				}
 				

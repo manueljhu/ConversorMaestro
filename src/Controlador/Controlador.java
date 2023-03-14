@@ -1,5 +1,8 @@
 package Controlador;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.security.PublicKey;
@@ -7,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.management.modelmbean.ModelMBean;
+import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -58,26 +62,24 @@ public class Controlador {
 	ArrayList<OpcionTablaDestino> tablasDestino;
 	private RelacionCampos relacionCampos = new RelacionCampos();
 
+
 	// Objetos DAO o CRUD de la base de datos
 //		private SancionDAO sancionDAO; 
 
 	public Controlador() {
 		// Creamos las ventanas de la aplicaci�n
 		configuracionConexion = new ConfiguracionConexion();
-		RelacionCampSQL = new RelacionCampSQL();
+		//RelacionCampSQL = new RelacionCampSQL();
 		RelacionCampDBF = new RelacionCampDBF();
 		RelacionCampExcel = new RelacionCampExcel();
 		ResumenTraspaso = new ResumenTraspaso();
 		conexion = new daoConexionSQL(this);
 
 		configuracionConexion.controlador(this);
-		RelacionCampSQL.setControlador(this);
+		//RelacionCampSQL.setControlador(this);
 		RelacionCampDBF.setControlador(this);
 		RelacionCampExcel.setControlador(this);
 
-		// Creamos los objetos DAO
-//			sancionDAO = new SancionDAO();
-//			infractoresDAO = new InfractoresDAO();
 	}
 
 	public void inciarPrograma() {
@@ -94,7 +96,6 @@ public class Controlador {
 
 	public void cerrarVentanaSQL() {
 		RelacionCampSQL.setVisible(false);
-
 	}
 
 	public void setConexionDestino(String cadenaConexion, String usuario, String contrasena) {
@@ -695,6 +696,19 @@ public class Controlador {
 			actualizar = RelacionCampSQL.getRdbtnActualizar();
 			insertar = RelacionCampSQL.getRdbtnInsertar();
 			vaciarDestino = RelacionCampSQL.getChckbxVaciarDestino();
+			
+			relacionCampos.setTablaOrigen(tablaOrigen.getSelectedItem().toString());
+			relacionCampos.setTablaDestino(tablaDestino.getSelectedItem().toString());
+			
+			if (actualizar.isSelected())  {
+				relacionCampos.setTipoOperacion("Actualizar");
+			} else if (insertar.isSelected()) {
+				relacionCampos.setTipoOperacion("Insertar");				
+			}
+			
+			relacionCampos.setVaciarDestino(vaciarDestino.isSelected());
+			
+			
 			break;
 		case "DBF":
 			break;
@@ -705,13 +719,147 @@ public class Controlador {
 		try {
 			fichero = new FileWriter(ruta);
 			pw = new PrintWriter(fichero);
+			
+			pw.println("TabOri:"+relacionCampos.getTablaOrigen());
+			pw.println("TabDes:"+relacionCampos.getTablaDestino());
+			pw.println("TipOpe:"+relacionCampos.getTipoOperacion());
+			pw.println("VacDes:"+relacionCampos.isVaciarDestino());
+			
+			ArrayList<Relacion> rel = relacionCampos.getRelacionColumnas();
+			for(int i = 0; i < rel.size(); i++) {
+				pw.println(rel.get(i).getCampoOrigen()+"-"+rel.get(i).getCampoDestino());
+			}
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e);
+		} finally {
+			try {
+				if(fichero != null) {
+					fichero.close();
+				}
+			}catch(Exception e2) {
+				System.out.println(e2);
+			}
+		}
+	}
 
+	public void leerFichero(String ruta, String tipoOrigenDatos) {
+		File archivo = null;
+		FileReader fr = null;
+		BufferedReader br = null;
+		relacionCampos = new RelacionCampos();
+		
+		JComboBox tablaOrigen;
+		JComboBox tablaDestino;
+
+		JRadioButton actualizar;
+		JRadioButton insertar;
+
+		JCheckBox vaciarDestino;
+
+		
+
+		try {
+			archivo = new File(ruta);
+			if (!archivo.exists()) {
+				
+			}else{
+				fr = new FileReader(archivo);
+				br = new BufferedReader(fr);
+				
+				String linea;
+				Relacion relacioncolumna;
+				ArrayList<String> lineas = new ArrayList<>();
+				
+				while ((linea = br.readLine())!= null) {
+					lineas.add(linea);
+				}
+				for (int i = 0; i < lineas.size(); i++) {
+					String lineaLeida = lineas.get(i);
+					
+					if (i>=0 && i<3) {
+						String id = lineaLeida.substring(0,7);
+						String valor = lineaLeida.substring(7, lineaLeida.length());
+						switch (id) {
+						case "TabOri:":
+							if (!valor.equals("")) {
+								relacionCampos.setTablaOrigen(valor);
+							}
+							break;
+						case "TabDes:":
+							if (!valor.equals("")) {
+								relacionCampos.setTablaDestino(valor);
+							}
+							break;
+						case "TipOpe:":
+							if (!valor.equals("")) {
+								relacionCampos.setTipoOperacion(valor);
+							}
+							break;
+						case "VacDes:":
+							if (!valor.equals(valor)) {
+								relacionCampos.setVaciarDestino(Boolean.parseBoolean(valor));
+							}
+							
+						}	
+					} else {
+						String [] partes = lineaLeida.split("-");
+						relacioncolumna = new Relacion();
+						
+						if (!partes[0].equals("")) {
+							relacioncolumna.setCampoOrigen(partes[0]);
+							relacioncolumna.setCampoOrigenRelleno(true);
+							}
+						
+						if (!partes[1].equals(partes[1])) {
+							relacioncolumna.setCampoDestino(partes[1]);
+							relacioncolumna.setCampoOrigenRelleno(true);
+						}
+						relacionCampos.getRelacionColumnas().add(relacioncolumna);
+					}
+				}
+			} 
+			
+			switch (tipoOrigenDatos) {
+			case "SQL":
+				tablaOrigen = RelacionCampSQL.getComboBoxOrigen();
+				tablaDestino = RelacionCampSQL.getComboBoxDestino();
+				actualizar = RelacionCampSQL.getRdbtnActualizar();
+				insertar = RelacionCampSQL.getRdbtnInsertar();
+				vaciarDestino = RelacionCampSQL.getChckbxVaciarDestino();
+				
+				tablaOrigen.setSelectedItem(relacionCampos.getTablaOrigen());
+				tablaDestino.setSelectedItem(relacionCampos.getTablaDestino());
+				
+				if (relacionCampos.getTipoOperacion().equals("Actualizar")) {
+					actualizar.setSelected(true);
+					insertar.setSelected(false);
+				}else if (relacionCampos.getTipoOperacion().equals("Insertar")) {
+					actualizar.setSelected(false);
+					insertar.setSelected(true);
+				}
+				
+				/*relacionCampos.setTablaOrigen(tablaOrigen.getSelectedItem().toString());
+				relacionCampos.setTablaDestino(tablaDestino.getSelectedItem().toString());*/
+				
+				break;
+			case "DBF":
+				break;
+			case "Excel":
+				break;
+			
+			}	
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 	}
-
+	
 	public void vistaSQL() {
+		relacionCampos = new RelacionCampos();
+		RelacionCampSQL = new RelacionCampSQL();
+		RelacionCampSQL.setControlador(this);
 		RelacionCampSQL.setVisible(true);
 	}
 

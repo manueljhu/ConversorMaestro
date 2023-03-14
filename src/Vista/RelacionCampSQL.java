@@ -56,9 +56,9 @@ public class RelacionCampSQL extends JFrame {
 	private JTable tableRelacionCampos;
 	private JFileChooser guardarRelacion;
 	private JFileChooser leerRelacion;
-	private JRadioButton rdbtnActualizar;
+	public JRadioButton rdbtnActualizar;
 	private JRadioButton rdbtnInsertar;
-	private JCheckBox chckbxVaciarDestino;
+	public JCheckBox chckbxVaciarDestino;
 
 	
 	
@@ -83,7 +83,7 @@ public class RelacionCampSQL extends JFrame {
 	 * Create the frame.
 	 */
 	public RelacionCampSQL() {
-//		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		setBounds(100, 100, 1361, 783);
 		
 		JMenuBar menuBar = new JMenuBar();
@@ -100,6 +100,7 @@ public class RelacionCampSQL extends JFrame {
 				try {
 					if (guardarRelacion.showSaveDialog(null)==guardarRelacion.APPROVE_OPTION) {
 						rutaGuardado = guardarRelacion.getSelectedFile().getAbsolutePath()+".crin";
+						controlador.guardarFicheroRelacion(rutaGuardado, "SQL");
 					}
 				} catch (Exception e2) {
 					// TODO: handle exception
